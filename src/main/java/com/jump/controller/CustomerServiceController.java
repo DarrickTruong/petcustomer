@@ -8,6 +8,7 @@ import javax.persistence.Table;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ import com.jump.service.PetService;
 
 @RestController
 @RequestMapping("customer")
+@CrossOrigin(origins = "http://localhost:3001/")
 public class CustomerServiceController {
 
 	
@@ -59,6 +61,23 @@ public class CustomerServiceController {
 		
 		Customer result = customerService.addCustomer(customer);
     	result.setPetList(ps.findPetsByCustomerId(result.getId()));
+		
+		URI location = ServletUriComponentsBuilder
+				.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(result.getId())
+				.toUri();
+		
+		return ResponseEntity
+				.created(location)
+				.build();
+	}
+	
+	@PostMapping("/only")
+	public ResponseEntity<Customer> addCustomerOnly(@RequestBody Customer customer) throws URISyntaxException {
+		
+		
+		Customer result = customerService.addCustomer(customer);
 		
 		URI location = ServletUriComponentsBuilder
 				.fromCurrentRequest()

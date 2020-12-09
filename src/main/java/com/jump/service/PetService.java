@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.jump.model.Pet;
 
-@FeignClient(name = "Pet-Clinic-Project")
+@FeignClient(name = "pet-clinic-project")
 public interface PetService {
 
 	
-	@PostMapping("pets")
+	@PostMapping("api/pets")
 	Pet addPet(@RequestBody Pet pet);
 	
 	@GetMapping("pets/customer/{id}")
