@@ -2,19 +2,18 @@ package com.jump.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
-import javax.persistence.Table;
+import javax.security.auth.login.LoginException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -59,6 +58,7 @@ public class CustomerServiceController {
 	public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer) throws URISyntaxException {
 		System.out.println(customer);
 		Customer result = customerService.addCustomer(customer);
+		
 		List<Pet> petList = customer.getPetList();
 		for(Pet p : petList) {
 			p.setOwnerId(result.getId());
@@ -96,6 +96,26 @@ public class CustomerServiceController {
 		return ResponseEntity
 				.created(location)
 				.build();
+	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody LinkedHashMap<String, String> user) throws LoginException {
+		System.out.println("user " + user.get("name"));
+		List<Customer> customers = customerService.getCustomers();
+		
+		for (Customer c : customers) {
+			if (c.getName().equals(user.get("name"))) {
+				if (c.getPhone().equals(user.get("phone"))) {
+					c.setPetList(ps.findPetsByCustomerId(c.getId()));
+					return ResponseEntity.ok(c);
+				} else {
+					throw new LoginException();
+				}
+			} else {
+				throw new LoginException();
+			}
+		}
+		return null;
 	}
 	
 	@PutMapping("/{id}")
