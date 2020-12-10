@@ -15,9 +15,9 @@ import com.jump.model.Pet;
 public interface PetService {
 
 	
-	@PostMapping("api/pets")
+	@PostMapping
 	Pet addPet(@RequestBody Pet pet);
 	
-	@GetMapping("pets/customer/{id}")
+	@GetMapping("customer/{id}")
 	List<Pet> findPetsByCustomerId(@PathVariable Integer id);
 }

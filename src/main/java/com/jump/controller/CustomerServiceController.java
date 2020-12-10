@@ -25,8 +25,8 @@ import com.jump.service.CustomerService;
 import com.jump.service.PetService;
 
 @RestController
-@RequestMapping("customer")
-@CrossOrigin(origins = "http://localhost:3001/")
+//@RequestMapping("customer")
+//@CrossOrigin(origins = "http://localhost:3001/")
 public class CustomerServiceController {
 
 	
@@ -48,19 +48,27 @@ public class CustomerServiceController {
 	}
 	
 	@GetMapping("/{id}")
-	public Customer getCustomerById(@PathVariable int id) {
-		return customerService.getCustomer(id);
+	public ResponseEntity<Customer> getCustomerById(@PathVariable int id) {
+		
+		Customer customer = customerService.getCustomer(id);
+		customer.setPetList(ps.findPetsByCustomerId(customer.getId()));
+		return ResponseEntity.ok(customer);
 	}
 	
 	@PostMapping
 	public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer) throws URISyntaxException {
+		System.out.println(customer);
+		Customer result = customerService.addCustomer(customer);
 		List<Pet> petList = customer.getPetList();
 		for(Pet p : petList) {
+			p.setOwnerId(result.getId());
 			ps.addPet(p);
 		}
 		
-		Customer result = customerService.addCustomer(customer);
+		
     	result.setPetList(ps.findPetsByCustomerId(result.getId()));
+    	
+    	
 		
 		URI location = ServletUriComponentsBuilder
 				.fromCurrentRequest()
