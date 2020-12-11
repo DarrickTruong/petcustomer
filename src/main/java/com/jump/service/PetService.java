@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.jump.model.Pet;
 
-@FeignClient(name = "pet-clinic-project")
+@FeignClient(name = "pet-microservice")
 public interface PetService {
 
-	
 	@PostMapping
 	Pet addPet(@RequestBody Pet pet);
 	

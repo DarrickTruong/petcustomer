@@ -15,10 +15,8 @@ import com.jump.repository.CustomerRepository;
 public class CustomerService {
 	
 	
-	
 	@Autowired
 	CustomerRepository cr;
-	
 	
 	
 	public Customer addCustomer(Customer customer) {

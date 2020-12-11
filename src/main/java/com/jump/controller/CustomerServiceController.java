@@ -27,14 +27,12 @@ import com.jump.service.PetService;
 //@RequestMapping("customer")
 //@CrossOrigin(origins = "http://localhost:3001/")
 public class CustomerServiceController {
-
 	
 	@Autowired
 	CustomerService customerService;
 	
 	@Autowired
 	PetService ps;
-	
 
 	@GetMapping
 	public ResponseEntity<List<Customer>> getAll() {
